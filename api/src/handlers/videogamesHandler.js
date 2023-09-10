@@ -1,22 +1,46 @@
-const getVideogames= (req, res)=>{
-    res.status(200).send("aca estan todos los videojuegos");
+const { postGame, getGamesById, getGamesByName, getAllGames } = require("../controllers/videogamesController.js");
+
+const getVideogames= async (req, res)=>{
+    const {name}=req.query;
+    try {
+        if(name){
+            const games= await getGamesByName(name);
+            res.status(200).json(games);
+        }else{
+        const allGames= await getAllGames();
+        res.status(200).json(allGames)
+        }
+    } catch (error) {
+     res.status(500).json({error: "internal server error"})   
+    }
 };
 
-const getDetailVideogame= (req, res)=>{
-    res.status(200).send("aca esta el detail de un videojuego")
+const getDetailVideogame= async(req, res)=>{
+        const {id}= req.params;
+
+        const source= isNaN(id) ? "DB" : "Api";
+
+    try {
+        const response= await getGamesById(id, source);
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(400).json({error:error.message})
+    }
 };
 
-const getNombreVideogame= (req, res)=>{
-    res.status(200).send("aca esta el videojuego por nombre")
-}
 
-const CreateVideogame= (req, res)=>{
-    res.status(200).send("videojuego creado")
+const CreateVideogame= async (req, res)=>{
+        const {name, description, platforms, image, year_start, rating, genres}=req.body;
+    try {
+        const response= await postGame(name, description, platforms, image, year_start, rating, genres);
+        res.status(200).json(response)
+    } catch (error) { 
+        res.status(400).json({error:error.message});
+    } 
 };
 
 module.exports= {
     getVideogames,
     getDetailVideogame,
     CreateVideogame,
-    getNombreVideogame,
 }

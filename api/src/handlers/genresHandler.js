@@ -1,5 +1,13 @@
-const getGenres=(req, res)=>{
-    res.status(200).send("aqui estan los generos existentes")
+const { getAllGenres }= require ("../controllers/genresControllers.js")
+
+const getGenres=async (req, res)=>{
+try {
+    const allGenres= await getAllGenres()
+    res.status(200).json(allGenres)
+    
+} catch (error) {
+    res.status(400).json(error)
+}
 };
 
 module.exports={

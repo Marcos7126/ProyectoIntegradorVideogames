@@ -1,9 +1,11 @@
-const { genre }= require ("../db");
+const { Genre }= require ("../db");
+const axios=require ("axios")
 
-const getGenres= async ()=>{
-    const getAllGenres= await genre.findAll();
+const getAllGenres= async ()=>{
+    const AllGenres= await Genre.findAll();
+    return AllGenres
 }
 
 module.exports= {
-    getGenres
+    getAllGenres
 }
